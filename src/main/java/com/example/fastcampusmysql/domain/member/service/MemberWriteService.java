@@ -26,4 +26,16 @@ public class MemberWriteService {
 
         return memberRepository.save(member);
     }
+
+    public void changeNickname(Long memberId, String nickname) {
+        /*
+        * 1. 회원의 이름을 변경
+        * 2. 변경 내역을 저장한다. ( 히스토리 )
+        * */
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        member.changeNickname(nickname);
+        memberRepository.save(member);
+        // TODO: 변경내역 히스토리를 저장한다.
+
+    }
 }
