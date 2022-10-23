@@ -6,6 +6,7 @@ import com.example.fastcampusmysql.domain.member.dto.RegisterMemberCommand;
 import com.example.fastcampusmysql.domain.member.entity.Member;
 import com.example.fastcampusmysql.domain.member.service.MemberReadService;
 import com.example.fastcampusmysql.domain.member.service.MemberWriteService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,6 +1,7 @@
 package com.example.fastcampusmysql.domain.member.repository;
 
 import com.example.fastcampusmysql.domain.member.entity.Member;
+import com.example.fastcampusmysql.domain.member.entity.MemberNicknameHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -22,6 +23,15 @@ public class MemberRepository {
     final private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     static final private String TABLE = "member";
 
+    static final RowMapper<Member> rowMapper = (ResultSet resultSet, int rowNum) -> Member
+            .builder()
+            .id(resultSet.getLong("id"))
+            .email(resultSet.getString("email"))
+            .nickname(resultSet.getString("nickname"))
+            .birthday(resultSet.getObject("birthday", LocalDate.class))
+            .createdAt(resultSet.getObject("createdAt", LocalDateTime.class))
+            .build();
+
     public Optional<Member> findById(Long id) {
         String sql = String.format("SELECT * FROM %s WHERE id = :id", TABLE);
         MapSqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
@@ -36,6 +46,14 @@ public class MemberRepository {
         Member member = namedParameterJdbcTemplate.queryForObject(sql, param, rowMapper);
         return Optional.ofNullable(member);
     }
+
+    public List<Member> findAllByIdIn(List<Long> ids) {
+        if(ids.isEmpty()) return List.of(); // 빈리스트 리턴
+        var sql = String.format("SELECT * FROM %s WHERE id in (:ids)", TABLE);
+        var params = new MapSqlParameterSource().addValue("ids", ids);
+        return namedParameterJdbcTemplate.query(sql, params, rowMapper);
+    }
+
     public Member save(Member member) {
         /*
         * member id를 보고 갱신 또는 삽입 결정
