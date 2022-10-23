@@ -45,7 +45,11 @@ public class MemberWriteService {
     }
 
     private void saveMemberNicknameHistory(Member member) {
-        MemberNicknameHistory history = MemberNicknameHistory.builder().memberId(member.getId()).build();
+        MemberNicknameHistory history = MemberNicknameHistory
+                .builder()
+                .memberId(member.getId())
+                .build();
+        memberNicknameHistoryRepository.save(history);
     }
 
 }
